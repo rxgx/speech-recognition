@@ -1,71 +1,64 @@
-import React, {Component} from 'react';
-import './App.css';
+import React, { useState } from 'react'
+import './App.css'
 
 const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition;
+  window.SpeechRecognition || window.webkitSpeechRecognition
 
 const SpeechGrammarList =
-  window.SpeechGrammarList || window.webkitSpeechGrammarList;
+  window.SpeechGrammarList || window.webkitSpeechGrammarList
 
-const speechRecognitionList = new SpeechGrammarList();
+const speechRecognitionList = new SpeechGrammarList()
 
-class App extends Component {
-  state = {
-    hasSpeech: false,
-    result: ''
-  };
+function App (props) {
+  const [hasSpeech, setHasSpeech] = useState(false)
+  const [result, setResult] = useState('')
 
-  constructor(props) {
-    super();
-    this.recognition = new SpeechRecognition();
-    this.recognition.grammars = speechRecognitionList;
-    this.recognition.lang = 'en-US';
-    this.recognition.onresult = this.handleVoiceResultEvent;
-    this.recognition.onspeechstart = this.handleSpeechStartEvent;
-    this.recognition.onspeechend = this.handleSpeechEndEvent;
+  const recognition = new SpeechRecognition()
+  recognition.grammars = speechRecognitionList
+  recognition.lang = 'en-US'
+  recognition.onresult = this.handleVoiceResultEvent
+  recognition.onspeechstart = this.handleSpeechStartEvent
+  recognition.onspeechend = this.handleSpeechEndEvent
 
-    console.log('created recognition');
+  console.log('created recognition')
+
+  const handleSpeechStartEvent = event => {
+    this.setState({ hasSpeech: true })
   }
 
-  handleSpeechStartEvent = event => {
-    this.setState({hasSpeech: true});
-  };
+  const handleSpeechEndEvent = event => {
+    this.setState({ hasSpeech: false })
+  }
 
-  handleSpeechEndEvent = event => {
-    this.setState({hasSpeech: false});
-  };
-
-  handleVoiceResultEvent = event => {
-    console.log('results', event.results);
-    const result = event.results[0][0].transcript;
-    this.setState({result});
+  const handleVoiceResultEvent = event => {
+    console.log('results', event.results)
+    const result = event.results[0][0].transcript
+    setResult(result)
     // bg.style.backgroundColor = color;
-  };
-
-  handleVoiceClickEvent = event => {
-    this.recognition.start();
-    console.log('Ready to receive a command');
-  };
-
-  render() {
-    return (
-      <div className="App">
-        <div className="App-header">
-          <h2>Press Button and Speak</h2>
-        </div>
-        <p>
-          <button onClick={this.handleVoiceClickEvent}>Press to Talk</button>
-          Has Speech?
-          <strong style={{color: this.state.hasSpeech ? 'green' : 'red'}}>
-            {this.state.hasSpeech ? 'Yes' : 'No'}
-          </strong>
-        </p>
-        <p>
-          <textarea rows="5" value={this.state.result} />
-        </p>
-      </div>
-    );
   }
+
+  const handleVoiceClickEvent = event => {
+    recognition.start()
+    console.log('Ready to receive a command')
+  }
+
+  return (
+    <div className='App'>
+      <div className='App-header'>
+        <h2>Press Button and Speak</h2>
+      </div>
+      <p>
+        <button onClick={this.handleVoiceClickEvent}>Press to Talk</button>
+        Has Speech?
+        <strong style={{ color: this.state.hasSpeech ? 'green' : 'red' }}>
+          {this.state.hasSpeech ? 'Yes' : 'No'}
+        </strong>
+      </p>
+      <p>
+        <textarea rows='5' value={this.state.result} />
+      </p>
+    </div>
+  )
 }
 
-export default App;
+export default App
