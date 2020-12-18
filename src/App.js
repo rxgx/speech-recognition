@@ -24,7 +24,7 @@ function App (props) {
   }
 
   const handleSpeechEndEvent = event => {
-    this.setHasSpeech(false)
+    setHasSpeech(false)
   }
 
   const handleVoiceResultEvent = event => {
