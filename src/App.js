@@ -7,27 +7,24 @@ const SpeechRecognition =
 const SpeechGrammarList =
   window.SpeechGrammarList || window.webkitSpeechGrammarList
 
-const speechRecognitionList = new SpeechGrammarList()
-
 function App (props) {
+  if (!SpeechRecognition || !SpeechGrammarList) {
+    return (
+      <div className='App'>
+        <p>Speech recognition not available in this browser.</p>
+      </div>
+    )
+  }
+
   const [hasSpeech, setHasSpeech] = useState(false)
   const [result, setResult] = useState('')
 
-  const recognition = new SpeechRecognition()
-  recognition.grammars = speechRecognitionList
-  recognition.lang = 'en-US'
-  recognition.onresult = this.handleVoiceResultEvent
-  recognition.onspeechstart = this.handleSpeechStartEvent
-  recognition.onspeechend = this.handleSpeechEndEvent
-
-  console.log('created recognition')
-
   const handleSpeechStartEvent = event => {
-    this.setState({ hasSpeech: true })
+    setHasSpeech(true)
   }
 
   const handleSpeechEndEvent = event => {
-    this.setState({ hasSpeech: false })
+    this.setHasSpeech(false)
   }
 
   const handleVoiceResultEvent = event => {
@@ -42,20 +39,31 @@ function App (props) {
     console.log('Ready to receive a command')
   }
 
+  const recognition = new SpeechRecognition()
+  const speechRecognitionList = new SpeechGrammarList()
+
+  recognition.grammars = speechRecognitionList
+  recognition.lang = 'en-US'
+  recognition.onresult = handleVoiceResultEvent
+  recognition.onspeechstart = handleSpeechStartEvent
+  recognition.onspeechend = handleSpeechEndEvent
+
+  console.log('created recognition')
+
   return (
     <div className='App'>
       <div className='App-header'>
         <h2>Press Button and Speak</h2>
       </div>
       <p>
-        <button onClick={this.handleVoiceClickEvent}>Press to Talk</button>
+        <button onClick={handleVoiceClickEvent}>Press to Talk</button>
         Has Speech?
-        <strong style={{ color: this.state.hasSpeech ? 'green' : 'red' }}>
-          {this.state.hasSpeech ? 'Yes' : 'No'}
+        <strong style={{ color: hasSpeech ? 'green' : 'red' }}>
+          {hasSpeech ? 'Yes' : 'No'}
         </strong>
       </p>
       <p>
-        <textarea rows='5' value={this.state.result} />
+        <textarea rows='5' value={result} />
       </p>
     </div>
   )
