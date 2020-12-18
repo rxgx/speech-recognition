@@ -1,13 +1,13 @@
 import React, { useState } from 'react'
 import './App.css'
 
-const SpeechRecognition =
-  window.SpeechRecognition || window.webkitSpeechRecognition
-
-const SpeechGrammarList =
-  window.SpeechGrammarList || window.webkitSpeechGrammarList
-
 function App (props) {
+  const SpeechRecognition =
+    window.SpeechRecognition || window.webkitSpeechRecognition
+
+  const SpeechGrammarList =
+    window.SpeechGrammarList || window.webkitSpeechGrammarList
+
   if (!SpeechRecognition || !SpeechGrammarList) {
     return (
       <div className='App'>
@@ -28,7 +28,6 @@ function App (props) {
   }
 
   const handleVoiceResultEvent = event => {
-    console.log('results', event.results)
     const result = event.results[0][0].transcript
     setResult(result)
     // bg.style.backgroundColor = color;
@@ -36,7 +35,6 @@ function App (props) {
 
   const handleVoiceClickEvent = event => {
     recognition.start()
-    console.log('Ready to receive a command')
   }
 
   const recognition = new SpeechRecognition()
@@ -47,8 +45,6 @@ function App (props) {
   recognition.onresult = handleVoiceResultEvent
   recognition.onspeechstart = handleSpeechStartEvent
   recognition.onspeechend = handleSpeechEndEvent
-
-  console.log('created recognition')
 
   return (
     <div className='App'>
@@ -63,7 +59,7 @@ function App (props) {
         </strong>
       </p>
       <p>
-        <textarea rows='5' value={result} />
+        <textarea rows='5' readOnly value={result} />
       </p>
     </div>
   )
