@@ -1,8 +1,8 @@
-import React from 'react';
-import ReactDOM from 'react-dom';
-import App from './App';
+import { render } from '@testing-library/react'
+import React from 'react'
+import App from './App'
 
-it('renders without crashing', () => {
-  const div = document.createElement('div');
-  ReactDOM.render(<App />, div);
-});
+test('renders without crashing', () => {
+  const { getByText } = render(<App />)
+  getByText(/speech recognition not available in this browser/i)
+})
